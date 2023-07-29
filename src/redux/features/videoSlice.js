@@ -94,8 +94,10 @@ export const videoSlice = createSlice({
             toast.success(`Note Added`)
         },
         removeNote: (state, { payload: { videoId, noteId } }) => {
-            const video = state.videos.find(({ _id }) => _id == videoId)
-            const notes = video.notes.filter(({ _id }) => _id == noteId)
+
+            let video = state.videos.find(({ _id }) => _id == videoId)
+
+            const notes = video.notes.filter(({ _id }) => _id !== noteId)
 
             video.notes = notes
 
@@ -111,8 +113,22 @@ export const videoSlice = createSlice({
             toast.error('Note Removed')
 
         },
-        updateNote: {
+        updateNote: (state, { payload: { videoId, note, noteId } }) => {
 
+            const video = state.videos.find(({ _id }) => _id == videoId)
+            video.notes.filter(({ _id }) => _id !== noteId)
+            video.notes.push(note)
+
+            state.videos = state.videos.map((singleVideo) => {
+                if (singleVideo._id == videoId) {
+                    return video
+                }
+                else {
+                    return singleVideo
+                }
+            })
+
+            toast.success(`Note Updated`)
         }
     }
 });
@@ -120,3 +136,4 @@ export const videoSlice = createSlice({
 export const { addNewNote, removeNote, updateNote, addToPlayList, addToWatchLater, removeFromWatchLater, removeFromPlaylist, removePlayList, createNewPlayList } = videoSlice.actions;
 
 export default videoSlice.reducer;
+

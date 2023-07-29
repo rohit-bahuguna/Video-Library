@@ -3,7 +3,7 @@ import { RxCross2 } from 'react-icons/rx'
 import { useDispatch } from 'react-redux'
 import { v4 as uuid } from "uuid"
 import { addNote } from '../redux/features/videoSlice'
-const AddNotes = ({ toggle, createNote }) => {
+const AddNotes = ({ toggle, createNote, videoId }) => {
     const [note, setNote] = useState({
         title: "",
         _id: uuid()
@@ -11,10 +11,15 @@ const AddNotes = ({ toggle, createNote }) => {
 
     const dispatch = useDispatch()
 
+
+
     return (
         <div className='flex bg-white flex-col gap-3 pt-3 pb-5 '>
             <RxCross2 className='text-3xl hover:text-red-500 cursor-pointer self-end mr-3 '
-                onClick={() => toggle(false)}
+                onClick={() => toggle({
+                    id: "",
+                    status: false
+                })}
             />
             <form className='flex flex-col gap-3' onSubmit={(e) => createNote(e, note)}>
                 <div className="flex flex-col gap-2 px-3">

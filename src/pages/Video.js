@@ -17,7 +17,10 @@ export const Video = () => {
     const { videoName, videoId } = useParams()
     const [create, setCreate] = useState(false)
     const [add, setAdd] = useState(false)
-    const [addNote, setAddNote] = useState(false)
+    const [addNote, setAddNote] = useState({
+        status: false,
+        id: ''
+    })
     const { videos } = useSelector(state => state)
 
     const video = videos.filter((video) => video._id === parseInt(videoId))[0]
@@ -47,7 +50,7 @@ export const Video = () => {
     const createNote = (e, note) => {
         e.preventDefault()
         dispatch(addNewNote({ videoId, note }))
-        setAddNote(false)
+        setAddNote({ id: "", status: false })
     }
 
     return (
@@ -68,7 +71,7 @@ export const Video = () => {
 
                                     onClick={() => setAdd(true)} />
                             <MdEditNote className='hover:text-indigo-700 cursor-pointer'
-                                onClick={() => setAddNote(true)}
+                                onClick={() => setAddNote({ id: "", status: true })}
                             />
                         </div>
 
@@ -76,7 +79,7 @@ export const Video = () => {
                             <AddToPlaylistModal setToggle={setAdd} setCreate={setCreate} addVideoToPlaylist={addVideoToPlaylist} />
                         </div>}
 
-                        {addNote && <div className='w-1/2  absolute right-0 bottom-2'>
+                        {addNote.status && <div className='w-1/2  absolute right-0 bottom-2'>
                             <AddNotes toggle={setAddNote} createNote={createNote} />
                         </div>}
                     </div>
@@ -88,7 +91,9 @@ export const Video = () => {
                                 video.notes && video.notes.map(({ title, _id }) => <div className='flex  justify-between'>
                                     <p className='text-lg font-semibold ' key={_id}>{title}</p>
                                     <div className='flex gap-5 items-center text-2xl'>
-                                        <BiSolidEditAlt className='hover:text-indigo-700' />
+                                        <BiSolidEditAlt className='hover:text-indigo-700'
+                                            onClick={() => setAddNote({ id: _id, status: true })}
+                                        />
                                         <AiTwotoneDelete className='text-red-500' onClick={() => dispatch(removeNote({ videoId, noteId: _id }))} />
                                     </div>
                                 </div>)
